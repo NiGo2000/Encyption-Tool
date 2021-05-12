@@ -1,0 +1,27 @@
+﻿<Window x:Class="Encrypter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Encrypter"
+        mc:Ignorable="d"
+        Title="Encrypter" Loaded="Window_Loaded" Height="450" Width="800">
+    <Grid x:Name="MainWindow1" AllowDrop="True" Drop="Grid_Drop" DragOver="Grid_DragOver" Background="Transparent">
+        <Label Content="File path" HorizontalAlignment="Left" Margin="133,47,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tbPath" HorizontalAlignment="Left" Margin="133,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="384" Height="27" IsReadOnlyCaretVisible="True"/>
+        <Button x:Name="bBrowse" Content="Browse" HorizontalAlignment="Left" Margin="545,78,0,0" VerticalAlignment="Top" Height="27" Width="58" Click="bBrowse_Click"/>
+        <RadioButton x:Name="rbEncrypt" Content="Encrypt" HorizontalAlignment="Left" Margin="131,134,0,0" VerticalAlignment="Top" GroupName="encrypt"/>
+        <RadioButton x:Name="rbDecrypt" Content="Decrypt" HorizontalAlignment="Left" Margin="210,134,0,0" VerticalAlignment="Top" GroupName="encrypt"/>
+        <Label Content="Password" HorizontalAlignment="Left" Margin="133,165,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="bStart" Content="Start" HorizontalAlignment="Left" Margin="210,217,0,0" VerticalAlignment="Top" Height="40" Width="342" Click="bStart_Click"/>
+        <Button x:Name="bDelete" Content="Delete File" HorizontalAlignment="Left" Margin="152,304,0,0" VerticalAlignment="Top" Height="30" Width="79" Click="bDelete_Click"/>
+        <Button x:Name="bHide" Content="Hide File" HorizontalAlignment="Left" Margin="272,304,0,0" VerticalAlignment="Top" Height="30" Width="64" Click="bHide_Click"/>
+        <Button x:Name="bVisible" Content="Visible File" HorizontalAlignment="Left" Margin="400,304,0,0" VerticalAlignment="Top" Height="30" Width="74" Click="bVisible_Click"/>
+        <PasswordBox x:Name="tbPassword" HorizontalAlignment="Left" Margin="245,165,0,0" VerticalAlignment="Top" Width="270" Height="20"/>
+        <RadioButton x:Name="rbASCII" Content="ASCII" HorizontalAlignment="Left" Margin="133,114,0,0" VerticalAlignment="Top" GroupName="methode" IsChecked="True"/>
+        <RadioButton x:Name="rbAES256" Content="AES256" HorizontalAlignment="Left" Margin="210,114,0,0" VerticalAlignment="Top" GroupName="methode"/>
+        <CheckBox x:Name="cbDeleteAESFile" Content="Delete .aes File when Decrypt" HorizontalAlignment="Left" Margin="344,122,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="cbHideAESFile" Content="Hide .aes File when Encrypt" HorizontalAlignment="Left" Margin="344,141,0,0" VerticalAlignment="Top" Width="196" IsChecked="True"/>
+        <Button x:Name="bPasswordManager" Content="Open Password Manager" HorizontalAlignment="Left" Margin="258,357,0,0" VerticalAlignment="Top" Height="67" Width="261" Click="bPasswordManager_Click"/>
+    </Grid>
+</Window>

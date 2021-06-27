@@ -1,0 +1,51 @@
+﻿<Window x:Class="Encrypter.wpf.SearchResultsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Encrypter.wpf"
+        xmlns:converters="clr-namespace:Encrypter.Transform" 
+        xmlns:srch="clr-namespace:Encrypter.SearchAlg" xmlns:controls="clr-namespace:Encrypter.OperatingElements"
+        ResizeMode="NoResize"
+        mc:Ignorable="d" Closing="Window_Closing" 
+        KeyDown="Window_KeyDown" 
+        Title="Search Results" 
+        Height="500" Width="900">
+    <Window.DataContext>
+        <srch:SearchModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <converters:RadioToEnumTransform x:Key="RadioToEnum"/>
+    </Window.Resources>
+    <Grid>
+        <Border HorizontalAlignment="Left" Width="117" Margin="10,10,0,52" BorderThickness="1">
+            <StackPanel>
+                <Label Content="Sort by:"/>
+                <RadioButton IsChecked="{Binding Path=TypeFilter, Converter={StaticResource RadioToEnum}, ConverterParameter=WebsitePath}" Content="Account Name" Margin="3 0 0 5" Height="18"/>
+                <RadioButton IsChecked="{Binding Path=TypeFilter, Converter={StaticResource RadioToEnum}, ConverterParameter=Email}" Content="Email" Margin="3 0 0 5" Height="18"/>
+                <RadioButton IsChecked="{Binding Path=TypeFilter, Converter={StaticResource RadioToEnum}, ConverterParameter=Username}" Content="Username" Margin="3 0 0 5" Height="18"/>
+                <RadioButton IsChecked="{Binding Path=TypeFilter, Converter={StaticResource RadioToEnum}, ConverterParameter=Password}" Content="Password" Margin="3 0 0 5" Height="18"/>
+            </StackPanel>
+        </Border>
+
+        <ListBox ItemsSource="{Binding AccountsList, UpdateSourceTrigger=PropertyChanged}" 
+                 SelectedIndex="{Binding ChosenIndex, UpdateSourceTrigger=PropertyChanged}"
+                 HorizontalAlignment="Stretch" 
+                 HorizontalContentAlignment="Stretch"
+                 ScrollViewer.CanContentScroll="False"
+                 FontFamily="Segoe UI Light" 
+                 Margin="137,10,10,52">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <controls:AccountOpElements DataContext="{Binding}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBox Text="{Binding SearchForCharacters, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Height="32" Margin="10,0,110,10" TextWrapping="Wrap" VerticalAlignment="Bottom">
+            <TextBox.InputBindings>
+                <KeyBinding Command="{Binding SearchCommand}" Key="Enter"/>
+            </TextBox.InputBindings>
+        </TextBox>
+        <Button Command="{Binding SearchCommand}" Content="Search" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="90" Height="32"/>
+    </Grid>
+</Window>

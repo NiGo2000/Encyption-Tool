@@ -10,5 +10,14 @@
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="wpf\PasswordManager.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="wpf\NewAccWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="wpf\SearchResultsWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 </Project>

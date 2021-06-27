@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\nick-\OneDrive\Desktop\Encrypter\obj\Debug\net5.0-windows\
+C:\Users\nick-\OneDrive\Desktop\Encyption-Tool-main\Encyption-Tool-main\obj\Debug\net5.0-windows\
 Encrypter
 none
 false
 TRACE;DEBUG;NET;NET5_0;NETCOREAPP
-C:\Users\nick-\OneDrive\Desktop\Encrypter\App.xaml
-11407045341
+C:\Users\nick-\OneDrive\Desktop\Encyption-Tool-main\Encyption-Tool-main\App.xaml
+51336242596
 
-4-761507618
+20-1031176913
 193-1891726104
-MainWindow.xaml;
+MainWindow.xaml;OperatingElements\AccountOpElements.xaml;wpf\NewAccWindow.xaml;wpf\PasswordManager.xaml;wpf\SearchResultsWindow.xaml;
 
 False
 

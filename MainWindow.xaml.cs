@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.IO;
 using Microsoft.Win32;
+using Encrypter.FileEncrypter;
+using System.Security;
+using Encrypter.wpf;
+using System.Net;
+using System.Collections.Generic;
 
 namespace Encrypter
 {
@@ -24,23 +18,89 @@ namespace Encrypter
     {
         byte[] abc;
         byte[,] table;
+        string[] DirectoryFiles;
 
-        PasswordEncrypter pwEncyrpter = new PasswordEncrypter();
-        FileManager fileManager = new FileManager();
+        private readonly string[] DirectoryPaths = { @"C:\EncryptTemp\", @"C:\EncryptTemp", "webPathName.txt", "email.txt", "usrName.txt", "pssWrd.txt" };
+        private static SecureString securePassword;
+        private static bool IsOpen;
+
+        /*
+         * System requirements
+         */
 
         public MainWindow()
         {
             InitializeComponent();
+            IsOpen = false;
         }
+
+        /// <summary>
+        /// drop file -> returns the file path to the tbPath
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Grid_Drop(object sender, DragEventArgs e)
+        {
+            if (tabFile.IsSelected)
+            {
+                if (null != e.Data && e.Data.GetDataPresent(DataFormats.FileDrop))
+                {
+                    string[] folderPath = (string[])(e.Data.GetData("FileName", false));
+                    tbPath.Text = folderPath[0];
+                }
+            }
+
+            if (tabDirectory.IsSelected)
+            {
+                if (null != e.Data && e.Data.GetDataPresent(DataFormats.FileDrop))
+                {
+                    string[] folderPath = (string[])(e.Data.GetData("FileName", false));
+                    DirectoryPath.Text = folderPath[0];
+                }
+            }
+
+        }
+
+        public static bool GetWindowIsOpen()
+        {
+            return IsOpen;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            IsOpen = true;
+            App.IsWindowOpen(IsOpen);
+        }
+
+        /// <summary>
+        /// Drag file to window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Grid_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
+        }
+
+        /*
+         * File Encrypter tab
+         */
 
         /// <summary>
         /// Opens tab where you can select filesand shows the path
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void bBrowse_Click(object sender, RoutedEventArgs e)
+        private void FileBrowse_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog od = new OpenFileDialog();
+            OpenFileDialog od = new();
             od.Multiselect = false;
             Nullable<bool> result = od.ShowDialog();
             if (result == true)
@@ -76,7 +136,7 @@ namespace Encrypter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void bStart_Click(object sender, RoutedEventArgs e)
+        private async void Start_Click(object sender, RoutedEventArgs e)
         {
             //Check input values
             if (!File.Exists(tbPath.Text))
@@ -108,17 +168,17 @@ namespace Encrypter
                 {
                     if ((bool)rbASCII.IsChecked)
                     {
-                        pwEncyrpter.FileASCIIEncrypt(fileContent, tbPassword.Password, keys, result, abc, table);
+                        PasswordEncrypter.FileASCIIEncrypt(fileContent, tbPassword.Password, keys, result, abc, table);
 
                         //Save result to new file with the same extention
-                        fileManager.SaveFile(0, tbPath.Text, result, (bool)cbDeleteAESFile.IsChecked, (bool)cbHideAESFile.IsChecked);
+                        FileManager.SaveFile(0, tbPath.Text, result, (bool)cbDeleteAESFile.IsChecked, (bool)cbHideAESFile.IsChecked);
                     }
                     else
                     {
-                        await pwEncyrpter.FileAESEncrypt(tbPath.Text, tbPassword.Password);
+                        await PasswordEncrypter.FileAESEncrypt(tbPath.Text, tbPassword.Password);
 
                         //Save result to new file with the same extention
-                        fileManager.SaveFile(1, tbPath.Text, result, (bool)cbDeleteAESFile.IsChecked, (bool)cbHideAESFile.IsChecked);
+                        FileManager.SaveFile(1, tbPath.Text, result, (bool)cbDeleteAESFile.IsChecked, (bool)cbHideAESFile.IsChecked);
                     }
                 }
                 
@@ -127,17 +187,17 @@ namespace Encrypter
                 {
                     if ((bool)rbASCII.IsChecked)
                     {
-                        pwEncyrpter.FileASCIIDecrypt(fileContent, tbPassword.Password, keys, result, abc, table);
+                        PasswordEncrypter.FileASCIIDecrypt(fileContent, tbPassword.Password, keys, result, abc, table);
 
                         //Save result to new file with the same extention
-                        fileManager.SaveFile(0, tbPath.Text, result, (bool)cbDeleteAESFile.IsChecked, (bool)cbHideAESFile.IsChecked);
+                        FileManager.SaveFile(0, tbPath.Text, result, (bool)cbDeleteAESFile.IsChecked, (bool)cbHideAESFile.IsChecked);
                     }
                     else
                     {
-                        await pwEncyrpter.FileAESDecrypt(tbPath.Text + ".aes", tbPath.Text, tbPassword.Password);
+                        await PasswordEncrypter.FileAESDecrypt(tbPath.Text + ".aes", tbPath.Text, tbPassword.Password);
 
                         //Save result to new file with the same extention
-                        fileManager.SaveFile(2, tbPath.Text, result, (bool)cbDeleteAESFile.IsChecked, (bool)cbHideAESFile.IsChecked);
+                        FileManager.SaveFile(2, tbPath.Text, result, (bool)cbDeleteAESFile.IsChecked, (bool)cbHideAESFile.IsChecked);
                         MessageBox.Show("File " + tbPath.Text +" is encryptet");
                     }
                 }
@@ -154,7 +214,7 @@ namespace Encrypter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void bDelete_Click(object sender, RoutedEventArgs e)
+        private void Delete_Click(object sender, RoutedEventArgs e)
         {
             if (!File.Exists(tbPath.Text))
             {
@@ -172,7 +232,7 @@ namespace Encrypter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void bHide_Click(object sender, RoutedEventArgs e)
+        private void Hide_Click(object sender, RoutedEventArgs e)
         {
             if (!File.Exists(tbPath.Text))
             {
@@ -191,7 +251,7 @@ namespace Encrypter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void bVisible_Click(object sender, RoutedEventArgs e)
+        private void Visible_Click(object sender, RoutedEventArgs e)
         {
             if (!File.Exists(tbPath.Text))
             {
@@ -218,40 +278,125 @@ namespace Encrypter
             return attributes & ~attributesToRemove;
         }
 
-        /// <summary>
-        /// drop file -> returns the file path to the tbPath
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Grid_Drop(object sender, DragEventArgs e)
+
+        /*
+         * Directory Encrypter tab
+         */
+
+        private void DirectoryStart_Click(object sender, RoutedEventArgs e)
         {
-           if (null != e.Data && e.Data.GetDataPresent(DataFormats.FileDrop))
+            //Check input values
+            if (!Directory.Exists(DirectoryPath.Text))
             {
-                string[] folderPath = (string[])(e.Data.GetData("FileName", false));
-                tbPath.Text = folderPath[0];
+                MessageBox.Show("Directory does not exist");
+                return;
+            }
+
+            if (String.IsNullOrEmpty(DirectoryPassword.Password))
+            {
+                MessageBox.Show("Password empty. Please enter your Password");
+                return;
+            }
+
+            //Get Directory content and encrypt/decrypt
+            try
+            {
+                DirectoryFiles = Directory.GetFiles(DirectoryPath.Text, "*", SearchOption.AllDirectories);
+
+                if ((bool)rbDecrypt_Directory.IsChecked)
+                {
+                    for (int i = 0; i < DirectoryFiles.Length; i++)
+                        PasswordEncrypter.DirectoryAESDecrypt(DirectoryFiles[i], DirectoryPassword.Password);
+                    MessageBox.Show("Directory is decryoted.");
+                }
+
+                if ((bool)rbEncrypt_Directory.IsChecked)
+                {
+                    MessageBox.Show("hallo");
+                    for (int i = 0; i < DirectoryFiles.Length; i++)
+                        PasswordEncrypter.DirectoryAESEncrypt(DirectoryFiles[i], DirectoryPassword.Password);
+                    MessageBox.Show("Directory is encrypted.");
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Directory is in use. Close other program is using this Directory");
+                return;
             }
         }
 
-        /// <summary>
-        /// Drag file to window
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Grid_DragOver(object sender, DragEventArgs e)
+        /*
+         * Password Manager tab
+         */
+
+        private async void LogIn_Click(object sender, RoutedEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (String.IsNullOrEmpty(PasswordLogIn.Password))
             {
-                e.Effects = DragDropEffects.Copy;
+                MessageBox.Show("Password empty. Please enter your Password");
+                return;
+            }
+
+            if (!Directory.Exists(DirectoryPaths[1]))
+            {
+                Directory.CreateDirectory(DirectoryPaths[1]);
+
+                for (int i = 2; i <= 5; i++)
+                {
+                    if (!File.Exists(Path.Combine(DirectoryPaths[0], DirectoryPaths[i])))
+                    {
+                        await File.Create(Path.Combine(DirectoryPaths[0], DirectoryPaths[i])).DisposeAsync();
+                    }
+                }
+
+                securePassword = new NetworkCredential("", PasswordLogIn.Password).SecurePassword;
+
+                PasswordManager mw = new();
+                mw.Show();
             }
             else
             {
-                e.Effects = DragDropEffects.None;
+                for (int i = 2; i <= 5; i++)
+                {
+                    if (!File.Exists(Path.Combine(DirectoryPaths[0], DirectoryPaths[i])))
+                    {
+                        await File.Create(Path.Combine(DirectoryPaths[0], DirectoryPaths[i])).DisposeAsync();
+                    }
+                }
+
+                try
+                {
+                    string[] DirectoryFiles;
+                    List<string> buffer = new();
+                    
+                    for (int i = 2; i <= 5; i++)
+                    {
+                        buffer.Add(DirectoryPaths[0] + DirectoryPaths[i]);
+                    }
+                    DirectoryFiles = buffer.ToArray();
+                    buffer.Clear();
+
+                    securePassword = new NetworkCredential("", PasswordLogIn.Password).SecurePassword;
+                    
+                    for (int i = 0; i < DirectoryFiles.Length; i++)
+                        PasswordEncrypter.DirectoryAESDecrypt(DirectoryFiles[i], PasswordLogIn.Password);
+                    
+                    PasswordManager mw = new();
+                    mw.Show();
+                }
+                catch
+                {
+                    MessageBox.Show("You have entered the wrong password.");
+                    return;
+                }
             }
         }
 
-        private void bPasswordManager_Click(object sender, RoutedEventArgs e)
+        public static SecureString GetSecureString(SecureString secureString)
         {
+            secureString = securePassword;
 
+            return secureString;
         }
     }
 }

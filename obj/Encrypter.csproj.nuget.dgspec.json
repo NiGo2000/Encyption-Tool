@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\nick-\\OneDrive\\Desktop\\Encrypter\\Encrypter.csproj": {}
+    "C:\\Users\\nick-\\OneDrive\\Desktop\\Encyption-Tool-main\\Encyption-Tool-main\\Encrypter.csproj": {}
   },
   "projects": {
-    "C:\\Users\\nick-\\OneDrive\\Desktop\\Encrypter\\Encrypter.csproj": {
+    "C:\\Users\\nick-\\OneDrive\\Desktop\\Encyption-Tool-main\\Encyption-Tool-main\\Encrypter.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\nick-\\OneDrive\\Desktop\\Encrypter\\Encrypter.csproj",
+        "projectUniqueName": "C:\\Users\\nick-\\OneDrive\\Desktop\\Encyption-Tool-main\\Encyption-Tool-main\\Encrypter.csproj",
         "projectName": "Encrypter",
-        "projectPath": "C:\\Users\\nick-\\OneDrive\\Desktop\\Encrypter\\Encrypter.csproj",
+        "projectPath": "C:\\Users\\nick-\\OneDrive\\Desktop\\Encyption-Tool-main\\Encyption-Tool-main\\Encrypter.csproj",
         "packagesPath": "C:\\Users\\nick-\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\nick-\\OneDrive\\Desktop\\Encrypter\\obj\\",
+        "outputPath": "C:\\Users\\nick-\\OneDrive\\Desktop\\Encyption-Tool-main\\Encyption-Tool-main\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nick-\\AppData\\Roaming\\NuGet\\NuGet.Config",
